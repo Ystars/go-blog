@@ -17,7 +17,7 @@ func JwtToken() gin.HandlerFunc {
 			code = enum.ERROR_TOKEN_EXIST
 			c.JSON(http.StatusOK, gin.H{
 				"status":  code,
-				"message": enum.GetErrMsg(code),
+				"message": enum.GetCodeMsg(code),
 			})
 			c.Abort()
 			return
@@ -25,20 +25,12 @@ func JwtToken() gin.HandlerFunc {
 
 		checkToken := strings.Split(tokenHeader, " ")
 		if len(checkToken) == 0 {
-			c.JSON(http.StatusOK, gin.H{
-				"status":  code,
-				"message": enum.GetErrMsg(code),
-			})
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": code, "message": enum.GetCodeMsg(code), "data": nil})
 			return
 		}
 
 		if len(checkToken) != 2 || checkToken[0] != "Bearer" {
-			c.JSON(http.StatusOK, gin.H{
-				"status":  code,
-				"message": enum.GetErrMsg(code),
-			})
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": code, "message": enum.GetCodeMsg(code), "data": nil})
 			return
 		}
 
@@ -48,25 +40,15 @@ func JwtToken() gin.HandlerFunc {
 		if err != nil {
 			if err == jwt.TokenExpired {
 				code = enum.ERROR_TOKEN_RUNTIME
-				c.JSON(http.StatusOK, gin.H{
-					"status":  enum.ERROR,
-					"message": enum.GetErrMsg(code),
-					"data":    nil,
-				})
-				c.Abort()
+				c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": enum.ERROR, "message": enum.GetCodeMsg(code), "data": nil})
 				return
 			}
 			// 其他错误
-			c.JSON(http.StatusOK, gin.H{
-				"status":  enum.ERROR,
-				"message": err.Error(),
-				"data":    nil,
-			})
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": enum.ERROR, "message": err.Error(), "data": nil})
 			return
 		}
 
-		c.Set("username", claims)
+		c.Set("username", claims.Username)
 		c.Next()
 	}
 }

@@ -14,15 +14,16 @@ func Load(r *gin.Engine) {
 
 	auth := r.Group("admin")
 	{
-		admin := V1.AdminApi{}
-		auth.POST("login", admin.Login)
+		auth.POST("login", V1.Entry.Admin.Login)
 	}
 
 	auth.Use(middleware.JwtToken())
 	{
-		admin := V1.AdminApi{}
-		// 用户模块的路由接口
-		auth.GET("users", admin.Show)
+		auth.Use(middleware.Authorization("", ""))
+		{
+			// 用户模块的路由接口
+			auth.GET("users", V1.Entry.Admin.Show)
+		}
 	}
 
 }

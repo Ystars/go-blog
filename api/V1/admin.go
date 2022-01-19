@@ -19,8 +19,8 @@ func (t *AdminApi) Login(c *gin.Context) {
 
 	code := adminModel.CheckLogin(adminModel.Username, adminModel.Password)
 
-	if code == enum.SUCCSE {
-		jwt.NewJWT().SetToken(c, jwt.SetJwtInfo{
+	if code == enum.SUCCESS {
+		jwt.NewJWT().SetToken(c, jwt.SetTokenData{
 			Username: adminModel.Username,
 			ID:       int(adminModel.ID),
 			Issuer:   "goblog",
@@ -31,7 +31,7 @@ func (t *AdminApi) Login(c *gin.Context) {
 		"status":  code,
 		"data":    adminModel.Username,
 		"id":      adminModel.ID,
-		"message": enum.GetErrMsg(code),
+		"message": enum.GetCodeMsg(code),
 		"token":   token,
 	})
 
@@ -41,7 +41,8 @@ func (t *AdminApi) Show(c *gin.Context) {
 	_ = c.ShouldBindJSON(&adminModel)
 	user, _ := c.Get("username")
 	c.JSON(http.StatusOK, gin.H{
-		"status":  enum.SUCCSE,
+		"status":  enum.SUCCESS,
+		"aaa":     112,
 		"message": user,
 	})
 }

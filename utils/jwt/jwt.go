@@ -12,16 +12,18 @@ import (
 
 // 定义错误
 var (
-	TokenExpired     error = errors.New(enum.GetErrMsg(enum.ERROR_TOKEN_RUNTIME))
-	TokenNotValidYet error = errors.New(enum.GetErrMsg(enum.ERROR_TOKEN_RUNTIME))
-	TokenMalformed   error = errors.New(enum.GetErrMsg(enum.ERROR_TOKEN_WRONG))
-	TokenInvalid     error = errors.New(enum.GetErrMsg(enum.ERROR_TOKEN_TYPE_WRONG))
+	TokenExpired     error = errors.New(enum.GetCodeMsg(enum.ERROR_TOKEN_RUNTIME))
+	TokenNotValidYet error = errors.New(enum.GetCodeMsg(enum.ERROR_TOKEN_RUNTIME))
+	TokenMalformed   error = errors.New(enum.GetCodeMsg(enum.ERROR_TOKEN_WRONG))
+	TokenInvalid     error = errors.New(enum.GetCodeMsg(enum.ERROR_TOKEN_TYPE_WRONG))
 )
 
-type SetJwtInfo struct {
-	Username string
-	ID       int
-	Issuer   string
+type SetTokenData struct {
+	Username  string
+	ID        int
+	Issuer    string
+	NotBefore int
+	ExpiresAt int
 }
 
 type JWT struct {
@@ -71,13 +73,22 @@ func (j *JWT) ParserToken(tokenString string) (*MyClaims, error) {
 }
 
 // SetToken 设置token
-func (j *JWT) SetToken(c *gin.Context, info SetJwtInfo) {
+func (j *JWT) SetToken(c *gin.Context, data SetTokenData) {
+	notBefore := time.Now().Unix() - 100
+	if data.NotBefore != 0 {
+		notBefore = int64(data.NotBefore)
+	}
+
+	expiresAt := time.Now().Unix() + 604800
+	if data.ExpiresAt != 0 {
+		expiresAt = int64(data.ExpiresAt)
+	}
 	claims := MyClaims{
-		Username: info.Username,
+		Username: data.Username,
 		StandardClaims: jwt.StandardClaims{
-			NotBefore: time.Now().Unix() - 100,
-			ExpiresAt: time.Now().Unix() + 604800,
-			Issuer:    info.Issuer,
+			NotBefore: notBefore,
+			ExpiresAt: expiresAt,
+			Issuer:    data.Issuer,
 		},
 	}
 
@@ -86,16 +97,16 @@ func (j *JWT) SetToken(c *gin.Context, info SetJwtInfo) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  enum.ERROR,
-			"message": enum.GetErrMsg(enum.ERROR),
+			"message": enum.GetCodeMsg(enum.ERROR),
 			"token":   token,
 		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
-		"data":    info.Username,
-		"id":      info.ID,
-		"message": enum.GetErrMsg(200),
+		"data":    data.Username,
+		"id":      data.ID,
+		"message": enum.GetCodeMsg(200),
 		"token":   token,
 	})
 	return

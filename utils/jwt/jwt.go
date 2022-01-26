@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"goblog/config"
 	"goblog/utils/enum"
-	"net/http"
+	"goblog/utils/response"
 	"time"
 )
 
@@ -95,20 +95,19 @@ func (j *JWT) SetToken(c *gin.Context, data SetTokenData) {
 	token, err := j.CreateToken(claims)
 
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		response.OkWithData(response.R{
 			"status":  enum.ERROR,
 			"message": enum.GetCodeMsg(enum.ERROR),
 			"token":   token,
-		})
+		}, c)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status":  200,
-		"data":    data.Username,
-		"id":      data.ID,
-		"message": enum.GetCodeMsg(200),
-		"token":   token,
-	})
+	response.OkWithData(response.R{
+		"data":  data.Username,
+		"id":    data.ID,
+		"token": token,
+	}, c)
 	return
 }
 

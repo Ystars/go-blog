@@ -2,7 +2,7 @@ package model
 
 // CasbinRule 文章
 type CasbinRule struct {
-	Init
+	Base
 	ID    uint   `gorm:"primaryKey;autoIncrement" json:"id"`
 	Ptype string `gorm:"size:100;uniqueIndex:unique_index" json:"p_type"`
 	V0    string `gorm:"size:100;uniqueIndex:unique_index" json:"v0"`

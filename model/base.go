@@ -59,6 +59,6 @@ func InitDb() {
 
 }
 
-type Init struct {
+type Base struct {
 	gorm.Model
 }

@@ -1,7 +1,7 @@
 package model
 
 type Comment struct {
-	Init
+	Base
 	ArticleId uint   `json:"article_id;comment:文章主键"`
 	Username  string `json:"size:256;comment:用户名"`
 	Email     string `json:"size:256;comment:电子邮箱"`

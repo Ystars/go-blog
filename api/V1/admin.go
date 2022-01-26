@@ -5,6 +5,7 @@ import (
 	"goblog/model"
 	"goblog/utils/enum"
 	"goblog/utils/jwt"
+	"goblog/utils/response"
 	"net/http"
 )
 
@@ -27,13 +28,13 @@ func (t *AdminApi) Login(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
+	response.OkWithData(response.R{
 		"status":  code,
 		"data":    adminModel.Username,
 		"id":      adminModel.ID,
 		"message": enum.GetCodeMsg(code),
 		"token":   token,
-	})
+	}, c)
 
 }
 

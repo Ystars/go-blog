@@ -7,7 +7,7 @@ import (
 
 // Admin 后台用户
 type Admin struct {
-	Init
+	Base
 	Username string `gorm:"type:varchar(20);not null;comment:用户名" json:"username" validate:"required,min=4,max=12" label:"用户名"`
 	Password string `gorm:"type:varchar(500);not null;comment:密码" json:"password" validate:"required,min=6,max=120" label:"密码"`
 }

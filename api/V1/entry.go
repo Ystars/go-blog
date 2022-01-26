@@ -1,7 +1,8 @@
 package V1
 
 type EntryGroup struct {
-	Admin AdminApi
+	Admin      AdminApi
+	Permission PermissionApi
 }
 
 var Entry = new(EntryGroup)

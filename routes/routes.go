@@ -19,10 +19,11 @@ func Load(r *gin.Engine) {
 
 	auth.Use(middleware.JwtToken())
 	{
-		auth.Use(middleware.Authorization("", ""))
+		auth.Use(middleware.Authorization())
 		{
 			// 用户模块的路由接口
 			auth.GET("users", V1.Entry.Admin.Show)
+			auth.GET("permission/add", V1.Entry.Permission.Add)
 		}
 	}
 

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"goblog/utils/enum"
 	"goblog/utils/jwt"
-	"net/http"
+	"goblog/utils/response"
 	"strings"
 )
 
@@ -15,22 +15,18 @@ func JwtToken() gin.HandlerFunc {
 		tokenHeader := c.Request.Header.Get("Authorization")
 		if tokenHeader == "" {
 			code = enum.ERROR_TOKEN_EXIST
-			c.JSON(http.StatusOK, gin.H{
-				"status":  code,
-				"message": enum.GetCodeMsg(code),
-			})
-			c.Abort()
+			response.AbortWithStatusJSON(enum.SUCCESS, response.R{}, code, c)
 			return
 		}
 
 		checkToken := strings.Split(tokenHeader, " ")
 		if len(checkToken) == 0 {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": code, "message": enum.GetCodeMsg(code), "data": nil})
+			response.AbortWithStatusJSON(enum.SUCCESS, response.R{}, code, c)
 			return
 		}
 
 		if len(checkToken) != 2 || checkToken[0] != "Bearer" {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": code, "message": enum.GetCodeMsg(code), "data": nil})
+			response.AbortWithStatusJSON(enum.SUCCESS, response.R{}, code, c)
 			return
 		}
 
@@ -40,11 +36,11 @@ func JwtToken() gin.HandlerFunc {
 		if err != nil {
 			if err == jwt.TokenExpired {
 				code = enum.ERROR_TOKEN_RUNTIME
-				c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": enum.ERROR, "message": enum.GetCodeMsg(code), "data": nil})
+				response.AbortWithStatusJSON(enum.SUCCESS, response.R{}, code, c)
 				return
 			}
 			// 其他错误
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": enum.ERROR, "message": err.Error(), "data": nil})
+			response.AbortWithStatusJSON(enum.SUCCESS, response.R{"message": err.Error()}, enum.ERROR, c)
 			return
 		}
 

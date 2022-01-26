@@ -2,7 +2,7 @@ package model
 
 // Article 文章
 type Article struct {
-	Init
+	Base
 	State        int    `gorm:"type:tinyint;not null;default:1;comment:状态" json:"state" label:"状态"`
 	IsTop        int    `gorm:"type:tinyint;not null;default:0;comment:是否置顶" json:"is_top" label:"是否置顶"`
 	Title        string `gorm:"type:varchar(100);not null;comment:标题" json:"title" label:"标题"`

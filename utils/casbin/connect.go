@@ -5,8 +5,8 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/persist"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
+	"goblog/enum"
 	"goblog/model"
-	"goblog/utils/enum"
 )
 
 type Connect struct{}
@@ -31,7 +31,8 @@ func (e *Connect) Common(adapter persist.Adapter) (*casbin.Enforcer, error) {
 
 // GormConnect gorm执行入口文件
 func (e *Connect) GormConnect() (*casbin.Enforcer, error) {
-	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(model.Db, &model.CasbinRule{})
+	var base model.Base
+	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(base.GetDb(), &model.CasbinRule{})
 	enforcer, err := e.Common(adapter)
 	return enforcer, err
 }

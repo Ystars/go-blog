@@ -6,7 +6,9 @@ import (
 	"goblog/middleware"
 )
 
-func Load(r *gin.Engine) {
+func Load() *gin.Engine {
+
+	r := gin.New()
 
 	r.Use(middleware.Log())
 	r.Use(gin.Recovery())
@@ -26,5 +28,7 @@ func Load(r *gin.Engine) {
 			auth.GET("permission/add", V1.Entry.Permission.Add)
 		}
 	}
+
+	return r
 
 }

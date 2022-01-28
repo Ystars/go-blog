@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"goblog/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -12,21 +11,14 @@ import (
 )
 
 var (
-	Db  *gorm.DB
+	db  *gorm.DB
 	Err error
 )
 
 // InitDb 初始化数据库
-func InitDb() {
-
-	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		config.DbUser,
-		config.DbPassWord,
-		config.DbHost,
-		config.DbPort,
-		config.DbName,
-	)
-	Db, Err = gorm.Open(mysql.Open(dns), &gorm.Config{
+func InitDb(dns string) {
+	
+	db, Err = gorm.Open(mysql.Open(dns), &gorm.Config{
 		// gorm日志模式：silent
 		Logger: logger.Default.LogMode(logger.Silent),
 		// 外键约束
@@ -45,9 +37,9 @@ func InitDb() {
 	}
 
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
-	_ = Db.AutoMigrate(&Admin{}, &CasbinRule{}, &Article{}, &Comment{})
+	_ = db.AutoMigrate(&Admin{}, &CasbinRule{}, &Article{}, &Comment{})
 
-	sqlDB, _ := Db.DB()
+	sqlDB, _ := db.DB()
 	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
 	sqlDB.SetMaxIdleConns(10)
 
@@ -61,4 +53,8 @@ func InitDb() {
 
 type Base struct {
 	gorm.Model
+}
+
+func (e *Base) GetDb() *gorm.DB {
+	return db
 }

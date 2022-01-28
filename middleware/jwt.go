@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"goblog/utils/enum"
+	"goblog/enum"
 	"goblog/utils/jwt"
 	"goblog/utils/response"
 	"strings"

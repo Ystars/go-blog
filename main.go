@@ -1,29 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin"
 	"goblog/config"
-	"goblog/model"
 	"goblog/routes"
-	"goblog/validate"
+	"os"
 )
 
 func main() {
-	if err := validate.TransInit("zh"); err != nil {
-		fmt.Printf("init trans failed, err:%v\n", err)
-		return
-	}
 
-	config.AutoLoad()
+	config.Init()
 
-	model.InitDb()
+	r := routes.Load()
 
-	gin.SetMode(config.AppMode)
-
-	r := gin.New()
-
-	routes.Load(r)
-
-	_ = r.Run(config.HttpPort)
+	_ = r.Run(os.Getenv("HTTP_PORT"))
 }

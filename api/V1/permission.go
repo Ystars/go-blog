@@ -2,8 +2,8 @@ package V1
 
 import (
 	"github.com/gin-gonic/gin"
+	"goblog/enum"
 	"goblog/service"
-	"goblog/utils/enum"
 	"goblog/utils/response"
 	"goblog/validate"
 )

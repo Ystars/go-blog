@@ -1,7 +1,7 @@
 package model
 
 import (
-	"goblog/utils/enum"
+	"goblog/enum"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,7 +16,7 @@ type Admin struct {
 func (t *Admin) CheckLogin(username string, password string) int {
 	var PasswordErr error
 
-	Db.Where("username = ?", username).First(&t)
+	t.GetDb().Where("username = ?", username).First(&t)
 
 	PasswordErr = bcrypt.CompareHashAndPassword([]byte(t.Password), []byte(password))
 
@@ -28,4 +28,8 @@ func (t *Admin) CheckLogin(username string, password string) int {
 	}
 
 	return enum.SUCCESS
+}
+
+func (t *Admin) Edit() {
+
 }

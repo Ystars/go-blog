@@ -4,9 +4,9 @@ import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"goblog/config"
-	"goblog/utils/enum"
+	"goblog/enum"
 	"goblog/utils/response"
+	"os"
 	"time"
 )
 
@@ -114,6 +114,6 @@ func (j *JWT) SetToken(c *gin.Context, data SetTokenData) {
 // NewJWT 初始化
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(config.JwtKey),
+		[]byte(os.Getenv("JWT_KEY")),
 	}
 }

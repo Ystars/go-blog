@@ -2,8 +2,8 @@ package V1
 
 import (
 	"github.com/gin-gonic/gin"
+	"goblog/enum"
 	"goblog/model"
-	"goblog/utils/enum"
 	"goblog/utils/jwt"
 	"goblog/utils/response"
 	"net/http"

@@ -2,7 +2,7 @@ package response
 
 import (
 	"github.com/gin-gonic/gin"
-	"goblog/utils/enum"
+	"goblog/enum"
 	"goblog/utils/maps"
 )
 

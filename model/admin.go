@@ -29,7 +29,3 @@ func (t *Admin) CheckLogin(username string, password string) int {
 
 	return enum.SUCCESS
 }
-
-func (t *Admin) Edit() {
-
-}

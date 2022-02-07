@@ -1,5 +1,6 @@
 package validate
 
+// PermissionValidate 校验角色参数
 type PermissionValidate struct {
 	Base
 	User   string `json:"user" binding:"required"`

@@ -16,5 +16,5 @@ func Init() {
 	}
 
 	// 连接数据库
-	model.InitDb(os.Getenv("MYSQL_DSN"))
+	model.InitDb(os.Getenv("DB_DSN"))
 }

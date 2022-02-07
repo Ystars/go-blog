@@ -2,29 +2,29 @@ package V1
 
 import (
 	"github.com/gin-gonic/gin"
-	"goblog/enum"
 	"goblog/service"
 	"goblog/utils/response"
-	"goblog/validate"
 )
 
 type PermissionApi struct{}
 
+// Add 添加角色权限
 func (t *PermissionApi) Add(c *gin.Context) {
-	var permissionValidate validate.PermissionValidate
-	if err, ok := permissionValidate.Check(c, &permissionValidate); !ok {
-		response.OkWithData(response.R{
-			"status":  enum.ERROR,
-			"message": err,
-		}, c)
+	permissionService := service.NewPermissionService()
+	err := permissionService.Add(c)
+	if err != nil {
+		response.OkWithErrorMessage(err, c)
 		return
 	}
-	_, err := service.NewAuthorize().AddPermissionForUser(permissionValidate.User, permissionValidate.Rule, permissionValidate.Method)
+	response.Ok(c)
+}
+
+// Delete 删除角色权限
+func (t *PermissionApi) Delete(c *gin.Context) {
+	permissionService := service.NewPermissionService()
+	err := permissionService.Delete(c)
 	if err != nil {
-		response.OkWithData(response.R{
-			"status":  enum.ERROR,
-			"message": err,
-		}, c)
+		response.OkWithErrorMessage(err, c)
 		return
 	}
 	response.Ok(c)

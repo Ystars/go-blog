@@ -21,11 +21,14 @@ func Load() *gin.Engine {
 
 	auth.Use(middleware.JwtToken())
 	{
+		// 后台casbin授权接口
 		auth.Use(middleware.Authorization())
 		{
-			// 用户模块的路由接口
 			auth.GET("users", V1.Entry.Admin.Show)
-			auth.GET("permission/add", V1.Entry.Permission.Add)
+			auth.POST("permission/add", V1.Entry.Permission.Add)
+			auth.DELETE("permission/delete", V1.Entry.Permission.Delete)
+			auth.POST("role/add", V1.Entry.Role.Add)
+			auth.DELETE("role/delete", V1.Entry.Role.Delete)
 		}
 	}
 

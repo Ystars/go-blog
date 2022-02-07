@@ -20,8 +20,8 @@ func migration() {
 	local.Create(&createAdmin)
 
 	createCasbin := []CasbinRule{
-		{Ptype: "p", Authority: "user", Path: "/admin/users", Method: "GET"},
-		{Ptype: "g", Authority: "bob", Path: "user"},
+		{Ptype: "p", Authority: "1", Path: "/admin/users", Method: "GET"},
+		{Ptype: "g", Authority: "user", Path: "1"},
 	}
 
 	local.Create(&createCasbin)

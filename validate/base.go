@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -44,13 +45,14 @@ func TransInit(local string) (err error) {
 type Base struct{}
 
 // Check 校验
-func (e *Base) Check(c *gin.Context, obj interface{}) (interface{}, bool) {
+func (e *Base) Check(c *gin.Context, obj interface{}) (error, bool) {
 	if err := c.ShouldBindJSON(&obj); err != nil {
 		vali, ok := err.(validator.ValidationErrors)
 		if !ok {
-			return err.Error(), false
+			return err, false
 		}
-		return vali.Translate(trans), false
+		dataType, _ := json.Marshal(vali.Translate(trans))
+		return fmt.Errorf(string(dataType)), false
 	}
 
 	return nil, true

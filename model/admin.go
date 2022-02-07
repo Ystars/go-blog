@@ -16,7 +16,7 @@ type Admin struct {
 func (t *Admin) CheckLogin(username string, password string) int {
 	var PasswordErr error
 
-	t.GetDb().Where("username = ?", username).First(&t)
+	db.Where("username = ?", username).First(&t)
 
 	PasswordErr = bcrypt.CompareHashAndPassword([]byte(t.Password), []byte(password))
 

@@ -3,43 +3,52 @@ package V1
 import (
 	"github.com/gin-gonic/gin"
 	"goblog/enum"
-	"goblog/model"
-	"goblog/utils/jwt"
+	"goblog/service"
 	"goblog/utils/response"
+	"goblog/validate"
 	"net/http"
 )
-
-var adminModel model.Admin
 
 type AdminApi struct{}
 
 // Login 后台登录
 func (t *AdminApi) Login(c *gin.Context) {
-	_ = c.ShouldBindJSON(&adminModel)
-	var token string
+	var validate validate.AdminLogin
 
-	code := adminModel.CheckLogin(adminModel.Username, adminModel.Password)
+	_ = c.ShouldBindJSON(&validate)
 
-	if code == enum.SUCCESS {
-		jwt.NewJWT().SetToken(c, jwt.SetTokenData{
-			Username: adminModel.Username,
-			ID:       int(adminModel.ID),
-			Issuer:   "goblog",
-		})
+	var adminService service.AdminService
+
+	token, err := adminService.Login(validate.Username, validate.Password)
+
+	if err != nil {
+		response.FailWithError(err, c)
 		return
 	}
-	response.OkWithData(response.R{
-		"status":  code,
-		"data":    adminModel.Username,
-		"id":      adminModel.ID,
-		"message": enum.GetCodeMsg(code),
-		"token":   token,
-	}, c)
+	response.OkWithData(response.R{"token": token}, c)
 
 }
 
-func (t *AdminApi) Show(c *gin.Context) {
-	_ = c.ShouldBindJSON(&adminModel)
+// Add 添加管理员
+func (t *AdminApi) Add(c *gin.Context) {
+
+	response.Ok(c)
+}
+
+// Delete 删除管理员
+func (t *AdminApi) Delete(c *gin.Context) {
+
+	response.Ok(c)
+}
+
+// Edit 修改管理员
+func (t *AdminApi) Edit(c *gin.Context) {
+
+	response.Ok(c)
+}
+
+// Detail 查看单个管理员
+func (t *AdminApi) Detail(c *gin.Context) {
 	user, _ := c.Get("username")
 	c.JSON(http.StatusOK, gin.H{
 		"status":  enum.SUCCESS,

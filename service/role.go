@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/casbin/casbin/v2"
-	"github.com/gin-gonic/gin"
 	casbinUtils "goblog/utils/casbin"
 	"goblog/validate"
 )
@@ -12,9 +11,8 @@ type RoleService struct {
 }
 
 // Add 添加用户角色
-func (t *RoleService) Add(c *gin.Context) error {
-	var roleValidate validate.RoleValidate
-	if err, ok := roleValidate.Check(c, &roleValidate); !ok {
+func (t *RoleService) Add(roleValidate validate.RoleValidate) error {
+	if err, ok := roleValidate.Check(&roleValidate); !ok {
 		return err
 	}
 	_, err := NewAuthorize().AddRoleForUser(roleValidate.User, roleValidate.Role)
@@ -25,9 +23,8 @@ func (t *RoleService) Add(c *gin.Context) error {
 }
 
 // Delete 删除用户角色
-func (t *RoleService) Delete(c *gin.Context) error {
-	var roleValidate validate.RoleValidate
-	if err, ok := roleValidate.Check(c, &roleValidate); !ok {
+func (t *RoleService) Delete(roleValidate validate.RoleValidate) error {
+	if err, ok := roleValidate.Check(&roleValidate); !ok {
 		return err
 	}
 	_, err := NewAuthorize().DeleteRoleForUser(roleValidate.User, roleValidate.Role)

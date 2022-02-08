@@ -3,9 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"goblog/enum"
-	"goblog/utils/response"
 	"os"
 	"time"
 )
@@ -73,7 +71,7 @@ func (j *JWT) ParserToken(tokenString string) (*MyClaims, error) {
 }
 
 // SetToken 设置token
-func (j *JWT) SetToken(c *gin.Context, data SetTokenData) {
+func (j *JWT) SetToken(data SetTokenData) (string, error) {
 	notBefore := time.Now().Unix() - 100
 	if data.NotBefore != 0 {
 		notBefore = int64(data.NotBefore)
@@ -94,21 +92,7 @@ func (j *JWT) SetToken(c *gin.Context, data SetTokenData) {
 
 	token, err := j.CreateToken(claims)
 
-	if err != nil {
-		response.OkWithData(response.R{
-			"status":  enum.ERROR,
-			"message": enum.GetCodeMsg(enum.ERROR),
-			"token":   token,
-		}, c)
-		return
-	}
-
-	response.OkWithData(response.R{
-		"data":  data.Username,
-		"id":    data.ID,
-		"token": token,
-	}, c)
-	return
+	return token, err
 }
 
 // NewJWT 初始化

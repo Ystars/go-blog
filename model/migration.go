@@ -1,11 +1,11 @@
 package model
 
-func migration() {
-	var base Base
+import "goblog/utils/scrypt"
 
+func migration() {
 	var admin Admin
 
-	local := base.GetDb()
+	local := DB
 
 	_ = local.AutoMigrate(&admin, &CasbinRule{}, &Article{}, &Comment{})
 
@@ -15,7 +15,7 @@ func migration() {
 		return
 	}
 
-	createAdmin := Admin{Username: "admin", Password: "$2a$10$YGL5a9z7ykG6BWOo.XhJU.h8r98BD5IvAmLISBB9rFIefbDzrv58O"}
+	createAdmin := Admin{Username: "admin", Password: scrypt.NewScrypt().GeneratePassword("123456")}
 
 	local.Create(&createAdmin)
 

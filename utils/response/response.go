@@ -54,6 +54,14 @@ func FailWithMessage(msgCode int, c *gin.Context) {
 	Result(enum.ERROR, R{}, msgCode, c)
 }
 
+func FailWithError(err error, c *gin.Context) {
+	code := enum.ERROR
+	r := R{
+		"message": err.Error(),
+	}
+	Result(enum.ERROR, r, code, c)
+}
+
 func FailWithDetailed(data R, msgCode int, c *gin.Context) {
 	Result(enum.ERROR, data, msgCode, c)
 }

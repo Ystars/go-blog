@@ -7,7 +7,3 @@ import (
 type Base struct {
 	gorm.Model
 }
-
-func (e *Base) GetDb() *gorm.DB {
-	return db
-}

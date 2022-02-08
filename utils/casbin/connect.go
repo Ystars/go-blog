@@ -31,8 +31,7 @@ func (e *Connect) Common(adapter persist.Adapter) (*casbin.Enforcer, error) {
 
 // GormConnect gorm执行入口文件
 func (e *Connect) GormConnect() (*casbin.Enforcer, error) {
-	var base model.Base
-	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(base.GetDb(), &model.CasbinRule{})
+	adapter, _ := gormadapter.NewAdapterByDBWithCustomTable(model.DB, &model.CasbinRule{})
 	enforcer, err := e.Common(adapter)
 	return enforcer, err
 }

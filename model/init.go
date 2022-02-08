@@ -10,15 +10,12 @@ import (
 	"time"
 )
 
-var (
-	db  *gorm.DB
-	Err error
-)
+var DB *gorm.DB
 
 // InitDb 初始化数据库
 func InitDb(dns string) {
 
-	db, Err = gorm.Open(mysql.Open(dns), &gorm.Config{
+	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{
 		// gorm日志模式：silent
 		Logger: logger.Default.LogMode(logger.Silent),
 		// 外键约束
@@ -31,12 +28,18 @@ func InitDb(dns string) {
 		},
 	})
 
-	if Err != nil {
-		fmt.Println("连接数据库失败，请检查参数：", Err)
+	if err != nil {
+		fmt.Println("连接数据库失败，请检查参数：", err)
 		os.Exit(1)
 	}
 
-	sqlDB, _ := db.DB()
+	sqlDB, err := db.DB()
+
+	if err != nil {
+		fmt.Println("连接数据库失败，请检查参数：", err)
+		os.Exit(1)
+	}
+
 	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
 	sqlDB.SetMaxIdleConns(10)
 
@@ -45,6 +48,8 @@ func InitDb(dns string) {
 
 	// SetConnMaxLifetiment 设置连接的最大可复用时间。
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
+
+	DB = db
 
 	migration()
 

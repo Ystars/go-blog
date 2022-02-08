@@ -5,7 +5,7 @@ import "encoding/json"
 type Transfer struct{}
 
 // MapToJson map转换json
-func (t *Transfer) MapToJson(param map[string]interface{}) string {
+func (t *Transfer) MapToJson(param interface{}) string {
 	dataType, _ := json.Marshal(param)
 	dataString := string(dataType)
 	return dataString

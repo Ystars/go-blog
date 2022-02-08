@@ -1,9 +1,7 @@
 package validate
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -11,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 	chTranslations "github.com/go-playground/validator/v10/translations/zh"
+	"goblog/utils/maps"
 )
 
 var trans ut.Translator
@@ -45,14 +44,15 @@ func TransInit(local string) (err error) {
 type Base struct{}
 
 // Check 校验
-func (e *Base) Check(c *gin.Context, obj interface{}) (error, bool) {
-	if err := c.ShouldBindJSON(&obj); err != nil {
-		vali, ok := err.(validator.ValidationErrors)
+func (e *Base) Check(obj interface{}) (error, bool) {
+	validate := validator.New()
+	if err := validate.Struct(&obj); err != nil {
+		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			return err, false
 		}
-		dataType, _ := json.Marshal(vali.Translate(trans))
-		return fmt.Errorf(string(dataType)), false
+		var transfer maps.Transfer
+		return fmt.Errorf(transfer.MapToJson(errs.Translate(trans))), false
 	}
 
 	return nil, true

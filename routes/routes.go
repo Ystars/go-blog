@@ -14,21 +14,24 @@ func Load() *gin.Engine {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
 
-	auth := r.Group("admin")
+	admin := r.Group("/api/v1/admin")
 	{
-		auth.POST("login", V1.Entry.Admin.Login)
-	}
+		admin.POST("login", V1.Entry.Admin.Login)
 
-	auth.Use(middleware.JwtToken())
-	{
-		// 后台casbin授权接口
-		auth.Use(middleware.Authorization())
+		admin.Use(middleware.JwtToken())
 		{
-			auth.GET("users", V1.Entry.Admin.Show)
-			auth.POST("permission/add", V1.Entry.Permission.Add)
-			auth.DELETE("permission/delete", V1.Entry.Permission.Delete)
-			auth.POST("role/add", V1.Entry.Role.Add)
-			auth.DELETE("role/delete", V1.Entry.Role.Delete)
+			// 后台casbin授权接口
+			admin.Use(middleware.Authorization())
+			{
+				admin.POST("add", V1.Entry.Admin.Add)
+				admin.PUT("edit", V1.Entry.Admin.Edit)
+				admin.DELETE("edit", V1.Entry.Admin.Delete)
+				admin.GET("detail", V1.Entry.Admin.Detail)
+				admin.POST("permission/add", V1.Entry.Permission.Add)
+				admin.DELETE("permission/delete", V1.Entry.Permission.Delete)
+				admin.POST("role/add", V1.Entry.Role.Add)
+				admin.DELETE("role/delete", V1.Entry.Role.Delete)
+			}
 		}
 	}
 

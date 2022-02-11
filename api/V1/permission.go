@@ -12,7 +12,10 @@ type PermissionApi struct{}
 // Add 添加角色权限
 func (t *PermissionApi) Add(c *gin.Context) {
 	var permissionValidate validate.PermissionValidate
-	_ = c.ShouldBindJSON(&permissionValidate)
+	if err := permissionValidate.BindJsonValidate(&permissionValidate, c); err != nil {
+		response.OkWithErrorMessage(err, c)
+		return
+	}
 	permissionService := service.NewPermissionService()
 	err := permissionService.Add(permissionValidate)
 	if err != nil {

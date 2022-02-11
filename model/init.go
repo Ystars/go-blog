@@ -13,7 +13,14 @@ import (
 var DB *gorm.DB
 
 // InitDb 初始化数据库
-func InitDb(dns string) {
+func InitDb() {
+	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("MYSQL_USER"),
+		os.Getenv("MYSQL_PASSWORD"),
+		os.Getenv("MYSQL_HOST"),
+		os.Getenv("MYSQL_PORT"),
+		os.Getenv("MYSQL_NAME"),
+	)
 
 	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{
 		// gorm日志模式：silent

@@ -12,9 +12,6 @@ type RoleService struct {
 
 // Add 添加用户角色
 func (t *RoleService) Add(roleValidate validate.RoleValidate) error {
-	if err, ok := roleValidate.Check(&roleValidate); !ok {
-		return err
-	}
 	_, err := NewAuthorize().AddRoleForUser(roleValidate.User, roleValidate.Role)
 	if err != nil {
 		return err
@@ -24,9 +21,6 @@ func (t *RoleService) Add(roleValidate validate.RoleValidate) error {
 
 // Delete 删除用户角色
 func (t *RoleService) Delete(roleValidate validate.RoleValidate) error {
-	if err, ok := roleValidate.Check(&roleValidate); !ok {
-		return err
-	}
 	_, err := NewAuthorize().DeleteRoleForUser(roleValidate.User, roleValidate.Role)
 	if err != nil {
 		return err

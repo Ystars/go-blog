@@ -2,18 +2,16 @@ package V1
 
 import (
 	"github.com/gin-gonic/gin"
-	"goblog/enum"
 	"goblog/service"
 	"goblog/utils/response"
 	"goblog/validate"
-	"net/http"
 )
 
 type AdminApi struct{}
 
 // Login 后台登录
 func (t *AdminApi) Login(c *gin.Context) {
-	var validate validate.AdminLogin
+	var validate validate.AdminCommon
 
 	_ = c.ShouldBindJSON(&validate)
 
@@ -31,7 +29,20 @@ func (t *AdminApi) Login(c *gin.Context) {
 
 // Add 添加管理员
 func (t *AdminApi) Add(c *gin.Context) {
+	var validate validate.AdminCommon
+	if err := validate.BindJsonValidate(&validate, c); err != nil {
+		response.OkWithErrorMessage(err, c)
+		return
+	}
 
+	var adminService service.AdminService
+
+	add := adminService.Add(validate)
+
+	if add != nil {
+		response.FailWithError(add, c)
+		return
+	}
 	response.Ok(c)
 }
 
@@ -49,10 +60,16 @@ func (t *AdminApi) Edit(c *gin.Context) {
 
 // Detail 查看单个管理员
 func (t *AdminApi) Detail(c *gin.Context) {
-	user, _ := c.Get("username")
-	c.JSON(http.StatusOK, gin.H{
-		"status":  enum.SUCCESS,
-		"aaa":     112,
-		"message": user,
-	})
+	/*var validate validate.AdminId
+
+	_ = c.ShouldBindJSON(&validate)
+	var adminService service.AdminService
+
+	admin, err := adminService.Detail(validate.ID)
+
+	if err != nil {
+		response.FailWithError(err, c)
+		return
+	}
+	response.OkWithData(response.R{"username": admin.Username, "id": admin.ID}, c)*/
 }

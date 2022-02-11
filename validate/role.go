@@ -1,7 +1,7 @@
 package validate
 
 type RoleValidate struct {
-	Base
+	Common
 	User string `json:"user" binding:"required"`
 	Role string `json:"role" binding:"required"`
 }

@@ -12,9 +12,6 @@ type PermissionService struct {
 
 // Add 添加角色权限
 func (t *PermissionService) Add(permissionValidate validate.PermissionValidate) error {
-	if err, ok := permissionValidate.Check(&permissionValidate); !ok {
-		return err
-	}
 	_, err := NewAuthorize().AddPermissionForUser(permissionValidate.User, permissionValidate.Rule, permissionValidate.Method)
 	if err != nil {
 		return err
@@ -24,9 +21,6 @@ func (t *PermissionService) Add(permissionValidate validate.PermissionValidate) 
 
 // Delete 删除角色权限
 func (t *PermissionService) Delete(permissionValidate validate.PermissionValidate) error {
-	if err, ok := permissionValidate.Check(&permissionValidate); !ok {
-		return err
-	}
 	_, err := NewAuthorize().DeletePermissionForUser(permissionValidate.User, permissionValidate.Rule, permissionValidate.Method)
 	if err != nil {
 		return err

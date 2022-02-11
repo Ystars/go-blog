@@ -6,21 +6,37 @@ import (
 	"goblog/model"
 	"goblog/utils/jwt"
 	"goblog/utils/scrypt"
+	"goblog/validate"
 )
 
 type AdminService struct{}
 
 // Add 添加管理员
-func (t *AdminService) Add() {}
+func (t *AdminService) Add(data validate.AdminCommon) error {
+	var adminModel model.Admin
+	return adminModel.Add(data)
+}
 
-// Delete 添加管理员
-func (t *AdminService) Delete() {}
+// Delete 删除管理员
+func (t *AdminService) Delete(data model.Admin) error {
+	return model.DB.Delete(&data).Error
+}
 
-// Edit 添加管理员
-func (t *AdminService) Edit() {}
+// Edit 修改管理员
+func (t *AdminService) Edit(data model.Admin) error {
+	return model.DB.Save(&data).Error
+}
 
 // Detail 查看管理员
-func (t *AdminService) Detail() {}
+func (t *AdminService) Detail(id int) (model.Admin, error) {
+	var adminModel model.Admin
+
+	if err := model.DB.First(&adminModel, id).Error; err != nil {
+		return adminModel, fmt.Errorf(enum.GetCodeMsg(enum.ERROR_USER_NOT_EXIST))
+	}
+
+	return adminModel, nil
+}
 
 //  setJwtToken 设置jwt登录信息
 func (t *AdminService) setJwtToken(m model.Admin) (string, error) {
